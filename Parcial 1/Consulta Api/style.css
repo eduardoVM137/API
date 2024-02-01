@@ -1,0 +1,55 @@
+.body {
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+}
+
+.Pelicula-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    overflow: hidden;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.Pelicula-card:hover {
+    transform: scale(1.03);
+}
+
+.Pelicula-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.Pelicula-info {
+    padding: 8px;
+    font-size: 0.9rem;
+}
+
+.search-container {
+    padding: 20px 0;
+    text-align: center;
+}
+
+.search-container input {
+    width: 250px;
+    margin-right: 10px;
+}
+
+.rating {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+}
+
+.rating>span {
+    display: inline-block;
+    position: relative;
+    width: 1.1em;
+}
+
+.rating>span:hover,
+.rating>span:hover~span {
+    color: orange;
+}
