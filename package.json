@@ -1,7 +1,11 @@
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "type": "module",
 <<<<<<< HEAD
+=======
+    "type": "module",
+>>>>>>> a93dd66 (yaml)
     "name": "api-2",
     "version": "1.0.0",
     "description": "",
@@ -11,6 +15,7 @@
     },
     "author": "",
     "license": "ISC",
+<<<<<<< HEAD
     "dependencies": {
         "express": "^4.19.1",
         "express-validator": "^7.0.1",
@@ -26,5 +31,12 @@
         "mysql": "^2.18.1",
 >>>>>>> 960c42a (primer commit)
         "mysql2": "^3.9.2"
+=======
+    "dependencies": {
+        "express": "^4.19.1",
+        "express-validator": "^7.0.1",
+        "mysql2": "^3.9.2",
+        "yaml": "^2.4.1"
+>>>>>>> a93dd66 (yaml)
     }
 }
