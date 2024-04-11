@@ -1,7 +1,8 @@
 const express = require('express');
-const path = require("path");
-//const basicAuth = require("express-basic-auth");
 const app = express();
+import path from 'path';
+import fs from 'fs'
+//const basicAuth = require("express-basic-auth");
 app.get('/', (req, res, next) => {
     res.send('Hello World!');
 });
