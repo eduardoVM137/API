@@ -1,3 +1,3 @@
-export function multplicador(a, b) {
+export function multiplicador(a, b) {
     return a * b;
 }

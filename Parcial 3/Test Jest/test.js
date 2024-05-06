@@ -1,4 +1,4 @@
-import { multiplicador } from './resource';
+import { multiplicador } from './resource/modulo.js';
 
 describe('Pruebas de la función modulo', () => {
   test('2 * 2 debería ser 4', () => {

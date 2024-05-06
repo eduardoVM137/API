@@ -1,4 +1,4 @@
 import { multiplicador } from './modulo.js';
 
-const resultado= multiplicador(2,2)
-console.log(resultado)
+const resultado= multiplicador(2,2);
+console.log(resultado);
