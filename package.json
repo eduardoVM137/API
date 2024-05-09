@@ -16,6 +16,8 @@
         "jsonwebtoken": "^9.0.2",
         "mysql2": "^3.9.2",
         "node": "^18.20.2",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.0",
         "yaml": "^2.4.1"
     }
 }
