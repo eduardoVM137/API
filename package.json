@@ -1,5 +1,4 @@
 {
-    "type": "module",
     "name": "api-2",
     "version": "1.0.0",
     "description": "",
@@ -16,7 +15,10 @@
         "jsonwebtoken": "^9.0.2",
         "mysql2": "^3.9.2",
         "node": "^18.20.2",
+        "redoc": "^2.1.4",
+        "redoc-express": "^2.1.0",
         "swagger-jsdoc": "^6.2.8",
+        "swagger-themes": "^1.4.3",
         "swagger-ui-express": "^5.0.0",
         "yaml": "^2.4.1"
     }

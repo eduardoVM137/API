@@ -1,0 +1,20 @@
+{
+  "name": "apimaestro",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.19.2",
+    "mysql2": "^3.9.7",
+    "redoc": "^2.1.4",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-themes": "^1.4.3",
+    "swagger-ui-express": "^4.6.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
