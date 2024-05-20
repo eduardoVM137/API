@@ -1,208 +1,179 @@
-const express = require("express");
+const express = require('express');
+const db = require('../config/database');
 const router = express.Router();
-
-const maestros = require("../util/data");
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     maestro:
- *       type: object
- *       required:
- *         - nombre
- *         - apellidos
- *         - activo
- *       properties:
- *         id:
- *           type: string
- *           description: The auto-generated id of the maestro
- *         nombre:
- *           type: string
- *           description: The nombre of your maestro
- *         apellidos:
- *           type: string
- *           description: The maestro apellidos
- *         activo:
- *           type: boolean
- *           description: Whether you have activo reading the maestro
- *         fecha_ingreso:
- *           type: string
- *           format: date
- *           description: The date the maestro was added
- *       example:
- *         id: d5fE_asz
- *         nombre: The New Turing Omnibus
- *         apellidos: Alexander K. Dewdney
- *         activo: false
- *         fecha_ingreso: 2020-03-10T04:05:06.157Z
- */
 
 /**
  * @swagger
  * tags:
- *   name: maestros
- *   description: The maestros managing API
+ *   name: Maestro
+ *   description: API para gestionar los maestros
+ */
+
+/**
+ * @swagger
  * /maestros:
  *   get:
- *     summary: Lists all the maestros
- *     tags: [maestros]
+ *     summary: Obtiene todos los maestros
+ *     tags: [Maestro]
  *     responses:
  *       200:
- *         description: The list of the maestros
+ *         description: Lista de maestros
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/maestro'
+ *                 $ref: '#/components/schemas/Maestro'
+ */
+router.get('/maestros', (req, res) => {
+  db.query('SELECT * FROM maestro', (err, results) => {
+    if (err) {
+      console.error('Error fetching maestros:', err);
+      res.status(500).json({ error: 'Error fetching maestros' });
+      return;
+    }
+    res.json(results);
+  });
+});
+
+/**
+ * @swagger
+ * /maestros/{id}:
+ *   get:
+ *     summary: Obtiene un maestro por ID
+ *     tags: [Maestro]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID del maestro
+ *     responses:
+ *       200:
+ *         description: Maestro encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Maestro'
+ *       404:
+ *         description: Maestro no encontrado
+ */
+router.get('/maestros/:id', (req, res) => {
+  const { id } = req.params;
+  db.query('SELECT * FROM maestro WHERE idMaestro = ?', [id], (err, result) => {
+    if (err) {
+      console.error('Error fetching maestro:', err);
+      res.status(500).json({ error: 'Error fetching maestro' });
+      return;
+    }
+    if (result.length === 0) {
+      res.status(404).json({ error: 'Maestro not found' });
+      return;
+    }
+    res.json(result[0]);
+  });
+});
+
+/**
+ * @swagger
+ * /maestros:
  *   post:
- *     summary: Create a new maestro
- *     tags: [maestros]
+ *     summary: Crea un nuevo maestro
+ *     tags: [Maestro]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/maestro'
+ *             $ref: '#/components/schemas/Maestro'
  *     responses:
- *       200:
- *         description: The created maestro.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/maestro'
+ *       201:
+ *         description: Maestro creado
  *       500:
- *         description: Some server error
- * /maestros/{id}:
- *   get:
- *     summary: Get the maestro by id
- *     tags: [maestros]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The maestro id
- *     responses:
- *       200:
- *         description: The maestro response by id
- *         contens:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/maestro'
- *       404:
- *         description: The maestro was not found
- *   put:
- *    summary: Update the maestro by the id
- *    tags: [maestros]
- *    parameters:
- *      - in: path
- *        name: id
- *        schema:
- *          type: string
- *        required: true
- *        description: The maestro id
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/maestro'
- *    responses:
- *      200:
- *        description: The maestro was updated
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/maestro'
- *      404:
- *        description: The maestro was not found
- *      500:
- *        description: Some error happened
- *   delete:
- *     summary: Remove the maestro by id
- *     tags: [maestros]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The maestro id
- *
- *     responses:
- *       200:
- *         description: The maestro was deleted
- *       404:
- *         description: The maestro was not found
+ *         description: Error creando el maestro
  */
-
-router.get("/", function (req, res) {
-  res.status(200).json(maestros);
-});
-
-router.get("/:id", function (req, res) {
-  let maestro = maestros.find(function (item) {
-    return item.id == req.params.id;
+router.post('/maestros', (req, res) => {
+  const { idMaestro, Nombre, Apellido_Paterno, Apellido_Materno } = req.body;
+  const query = 'INSERT INTO maestro (idMaestro, Nombre, Apellido_Paterno, Apellido_Materno) VALUES (?, ?, ?, ?)';
+  db.query(query, [idMaestro, Nombre, Apellido_Paterno, Apellido_Materno], (err, result) => {
+    if (err) {
+      console.error('Error creating maestro:', err);
+      res.status(500).json({ error: 'Error creating maestro' });
+      return;
+    }
+    res.status(201).json({ message: 'Maestro created', id: result.insertId });
   });
-
-  maestro ? res.status(200).json(maestro) : res.sendStatus(404);
 });
 
-router.post("/", function (req, res) {
-  const { nombre, apellidos, activo } = req.body;
-
-  let maestro = {
-    id: maestros.length + 1,
-    nombre: nombre,
-    apellidos: apellidos,
-    activo: activo !== undefined ? activo : false,
-    fecha_ingreso: new Date(),
-  };
-
-  maestros.push(maestro);
-
-  res.status(201).json(maestro);
-});
-
-router.put("/:id", function (req, res) {
-  let maestro = maestros.find(function (item) {
-    return item.id == req.params.id;
+/**
+ * @swagger
+ * /maestros/{id}:
+ *   put:
+ *     summary: Actualiza un maestro existente
+ *     tags: [Maestro]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID del maestro
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Maestro'
+ *     responses:
+ *       200:
+ *         description: Maestro actualizado
+ *       500:
+ *         description: Error actualizando el maestro
+ */
+router.put('/maestros/:id', (req, res) => {
+  const { id } = req.params;
+  const { Nombre, Apellido_Paterno, Apellido_Materno } = req.body;
+  const query = 'UPDATE maestro SET Nombre = ?, Apellido_Paterno = ?, Apellido_Materno = ? WHERE idMaestro = ?';
+  db.query(query, [Nombre, Apellido_Paterno, Apellido_Materno, id], (err, result) => {
+    if (err) {
+      console.error('Error updating maestro:', err);
+      res.status(500).json({ error: 'Error updating maestro' });
+      return;
+    }
+    res.json({ message: 'Maestro updated' });
   });
-
-  if (maestro) {
-    const { nombre, apellidos, activo } = req.body;
-
-    let updated = {
-      id: maestro.id,
-      nombre: nombre !== undefined ? nombre : maestro.nombre,
-      apellidos: apellidos !== undefined ? apellidos : maestro.apellidos,
-      activo: activo !== undefined ? activo : maestro.activo,
-      fecha_ingreso: maestro.fecha_ingreso,
-    };
-
-    maestros.splice(maestros.indexOf(maestro), 1, updated);
-
-    res.sendStatus(204);
-  } else {
-    res.sendStatus(404);
-  }
 });
 
-router.delete("/:id", function (req, res) {
-  let maestro = maestros.find(function (item) {
-    return item.id == req.params.id;
+/**
+ * @swagger
+ * /maestros/{id}:
+ *   delete:
+ *     summary: Elimina un maestro
+ *     tags: [Maestro]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID del maestro
+ *     responses:
+ *       200:
+ *         description: Maestro eliminado
+ *       500:
+ *         description: Error eliminando el maestro
+ */
+router.delete('/maestros/:id', (req, res) => {
+  const { id } = req.params;
+  db.query('DELETE FROM maestro WHERE idMaestro = ?', [id], (err, result) => {
+    if (err) {
+      console.error('Error deleting maestro:', err);
+      res.status(500).json({ error: 'Error deleting maestro' });
+      return;
+    }
+    res.json({ message: 'Maestro deleted' });
   });
-
-  if (maestro) {
-    maestros.splice(maestros.indexOf(maestro), 1);
-  } else {
-    return res.sendStatus(404);
-  }
-
-  res.sendStatus(204);
 });
 
 module.exports = router;
